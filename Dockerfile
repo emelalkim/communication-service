@@ -26,4 +26,4 @@ ENV PYTHONPATH=/app
 EXPOSE 5000
 
 # Run the Gunicorn server with the Flask app
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:create_app()"]

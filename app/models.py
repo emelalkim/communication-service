@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from sqlalchemy import String, Integer, DateTime
 from sqlalchemy.orm import mapped_column
-from database import db
+from app.database import db
 
 class MessageLog(db.Model):
     __tablename__ = "message_log"

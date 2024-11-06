@@ -1,6 +1,6 @@
 import json
-from models import MessageLog
-from database import db
+from app.models import MessageLog
+from app.database import db
 from datetime import datetime, timedelta, timezone
 
 def test_send_message_success(client):

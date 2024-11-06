@@ -1,18 +1,23 @@
 import pytest
-from app import app as flask_app
-from database import db
-from config import TestConfig
+from app import create_app
+from app.database import db
 
 @pytest.fixture
 def app():
-    # Configure the app for testing
-    flask_app.config.from_object(TestConfig)
-    with flask_app.app_context():
+    # Create the app instance using the factory function
+    app = create_app()
+
+    # Set up the application context and initialize the database
+    with app.app_context():
         db.create_all()  # Create tables in the in-memory database
-    yield flask_app
-    with flask_app.app_context():
-        db.drop_all()  # Drop tables after tests complete
+    
+    yield app
+
+    # Teardown: Drop all tables after the test is complete
+    with app.app_context():
+        db.drop_all()
 
 @pytest.fixture
 def client(app):
+    # Use the test client for making requests to the app
     return app.test_client()

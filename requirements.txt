@@ -4,3 +4,4 @@ psycopg2-binary
 pytest
 pytest-flask
 sqlalchemy>=2.0
+pytest-env

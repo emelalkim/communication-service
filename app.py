@@ -3,8 +3,14 @@ from database import init_db, db
 from models import MessageLog
 from mock_send import send_message
 from datetime import datetime, timedelta
+import os
 
 app = Flask(__name__)
+
+# Ensure the db directory exists
+db_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'db')
+os.makedirs(db_path, exist_ok=True)
+
 init_db(app)
 
 @app.route("/sendMessage", methods=["POST"])

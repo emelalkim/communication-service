@@ -1,0 +1,13 @@
+# Caches
+__pycache__/
+.pytest_cache/
+
+# Environment and virtual environment files
+.venv/
+
+# Database files
+*.db
+*.sqlite3
+*.sql
+db/
+instance/

@@ -48,7 +48,7 @@ pip install -r requirements.txt
 Start the development server:
 
 ```bash
-python app.py
+python run.py
 ```
 
 The application will be available at `http://127.0.0.1:5000`.
@@ -130,14 +130,82 @@ Tests cover:
 
 ```plaintext
 communication_service/
-├── app.py                # Main application file
-├── config.py             # Configuration settings
-├── database.py           # Database setup and configuration
-├── models.py             # Message logging model
-├── mock_send.py          # Mock functions for message sending
-├── requirements.txt      # Project dependencies
+├── app/
+│   ├── __init__.py        # Application factory and app initialization
+│   ├── config.py          # Configuration settings
+│   ├── database.py        # Database setup and configuration
+│   ├── mock_send.py       # Mock functions for message sending
+│   └── models.py          # Message logging model
 ├── tests/
 │   ├── __init__.py
-│   └── test_app.py       # Unit tests for endpoints
-└── README.md             # Project README
+│   ├── conftest.py        # Configuration settings for tests
+│   └── test_app.py        # Unit tests for endpoints
+├── Dockerfile             # Docker image creation file
+├── pytest.ini             # Configuration for pytest
+├── README.md              # Project README
+├── requirements.txt       # Project dependencies
+└── run.py                 # Entry point to run the application
 ```
+
+## Dockerization
+
+This project is containerized with Docker to simplify deployment and ensure a consistent environment.
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) installed on your system.
+
+### Building the Docker Image
+
+To build the Docker image, navigate to the project root (`communication_service/`) and run the following command:
+
+```bash
+docker build -t communication_service .
+```
+
+This command will:
+- Use the `Dockerfile` to create an image named `communication_service`.
+- Install dependencies specified in `requirements.txt`.
+- Set up the application to be ready for deployment in a production-like environment using `gunicorn`.
+
+### Running the Docker Container
+
+After building the image, you can run the application in a container using:
+
+```bash
+docker run \                                
+  -p 5000:5000 -d \
+  -v /local/path/to/db:/app/db \
+  --name communication_service \
+  communication_service
+```
+
+This command will:
+- Start the container in detached mode (`-d`).
+- Connect a docker volume for the database. Edit /local/path/to/db to point to a local directory where the database can be placed
+- Map port `5000` on your local machine to port `5000` in the container, making the application accessible at `http://localhost:5000`.
+
+### Stopping the Docker Container
+
+To stop the running container, list the containers to find the container ID:
+
+```bash
+docker ps
+```
+
+Then, stop the container with:
+
+```bash
+docker stop <container_id>
+```
+
+### Testing in the Docker Environment
+
+To run tests inside the Docker container, you can use the following command:
+
+```bash
+docker exec -it <container_id> pytest
+```
+
+This command will:
+- Execute `pytest` within the running container, allowing you to verify functionality in the Docker environment.

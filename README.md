@@ -209,3 +209,30 @@ docker exec -it <container_id> pytest
 
 This command will:
 - Execute `pytest` within the running container, allowing you to verify functionality in the Docker environment.
+
+## Deploying to an AWS EC2 Instance
+
+This Dockerized microservice is automatically deployed to an EC2 instance using the provided GitHub Actions workflow.
+
+### Prerequisites for EC2 Deployment
+
+1. **AWS EC2 Instance**: I have an ubuntu EC2 instance running and accessible.
+2. **Docker on EC2**: Docker is installed on the EC2 instance.
+3. **GitHub Secrets**:
+   - The following secrets are added to the GitHub repository settings:
+     - `EC2_HOST`: The public IP of EC2 instance.
+     - `EC2_USERNAME`: The username for SSH access.
+     - `EC2_PRIVATE_KEY`: Private SSH key for accessing the EC2 instance.
+
+### GitHub Actions Deployment Workflow
+
+The GitHub Actions workflow automates the deployment to your EC2 instance by following these steps:
+
+1. **Build and Push Docker Image**: The image is built and pushed to Docker Hub.
+2. **SSH to EC2 and Deploy**: The workflow SSHs into the EC2 instance and:
+   - Stops and removes any existing container with the same name.
+   - Pulls the latest image from Docker Hub.
+   - Runs the container, mapping port `5000` in the container to port `80` on the EC2 instance.
+   - Removes all stale images to ensure efficient disk usage.
+
+This setup ensures the microservice can be deployed both locally and on an EC2 instance, with automated updates using GitHub Actions.

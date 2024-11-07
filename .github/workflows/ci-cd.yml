@@ -78,3 +78,16 @@ jobs:
 
       - name: Test Docker container
         run: curl http://localhost:5000/messageLog
+
+      - name: Deploy to EC2 Instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            docker stop communication_service || true
+            docker rm communication_service || true
+            docker pull ${{ vars.DOCKERHUB_USERNAME }}/communication-service:latest
+            docker run -p 80:5000 -d -v /home/ubuntu/db:/app/db --name communication_service ${{ vars.DOCKERHUB_USERNAME }}/communication-service:latest
+            docker system prune --all --force

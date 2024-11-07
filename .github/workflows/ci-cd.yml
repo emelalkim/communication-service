@@ -66,7 +66,7 @@ jobs:
       - name: Wait for application to start
         run: |
           for i in {1..10}; do
-            if docker logs communication_service 2>&1 | grep -q "App started"; then
+            if docker logs communication_service 2>&1 | grep "Listening at: http://0.0.0.0:5000"; then
               echo "Application is ready"
               exit 0
             else

@@ -51,15 +51,17 @@ jobs:
 
       - name: Build and tag Docker image
         run: |
-          docker build -t communication-service:latest .
-          docker tag communication-service:latest emelalkim/communication-service:latest
+          docker build -t emelalkim/communication-service:latest .
 
       - name: Push Docker image to Docker Hub
         run: docker push emelalkim/communication-service:latest
 
-      - name: Deploy Docker container locally
+      - name: Deploy Docker container locally with volume
         run: |
-          docker run -d -p 5000:5000 communication-service:latest
+          docker run -p 5000:5000 -d \
+            -v communication_service_db:/app/db \
+            --name communication_service \
+            emelalkim/communication-service:latest
 
       - name: Test Docker container
         run: curl http://localhost:5000/messageLog

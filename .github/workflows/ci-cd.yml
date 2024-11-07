@@ -63,5 +63,18 @@ jobs:
             --name communication_service \
             emelalkim/communication-service:latest
 
+      - name: Wait for application to start
+        run: |
+          for i in {1..10}; do
+            if docker logs communication_service 2>&1 | grep -q "App started"; then
+              echo "Application is ready"
+              exit 0
+            else
+              echo "Waiting for application to start..."
+              sleep 5
+            fi
+          done
+          echo "Application failed to start in time" && exit 1
+
       - name: Test Docker container
         run: curl http://localhost:5000/messageLog

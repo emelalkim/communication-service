@@ -90,3 +90,4 @@ jobs:
             docker rm communication_service || true
             docker pull ${{ vars.DOCKERHUB_USERNAME }}/communication-service:latest
             docker run -p 80:5000 -d -v /home/ubuntu/db:/app/db --name communication_service ${{ vars.DOCKERHUB_USERNAME }}/communication-service:latest
+            docker system prune --all --force

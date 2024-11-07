@@ -57,3 +57,9 @@ jobs:
       - name: Push Docker image to Docker Hub
         run: docker push emelalkim/communication-service:latest
 
+      - name: Deploy Docker container locally
+        run: |
+          docker run -d -p 5000:5000 communication-service:latest
+
+      - name: Test Docker container
+        run: curl http://localhost:5000/messageLog
